@@ -1,4 +1,6 @@
 import PySimpleGUI as sg
+import ast
+import operator
 
 sg.theme('Dark')
 sg.set_options(font = 'Franklin 14', button_element_size = (6,3))
@@ -36,7 +38,13 @@ while True:
 
 	if event == '=':
 		full_operation.append(''.join(current_num))
-		result = eval(' '.join(full_operation))
+		expr = ' '.join(full_operation)
+		ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv}
+		nums = expr.split()
+		result = ast.literal_eval(nums[0])
+		for i in range(1, len(nums), 2):
+			op = ops[nums[i]]
+			result = op(result, ast.literal_eval(nums[i + 1]))
 		win['-TEXT-'].update(result)
 		full_operation = []
 
